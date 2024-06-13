@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pencarian Resep Masakan</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100">
+  <div class="container mx-auto p-4">
+    <h1 class="text-3xl font-bold mb-4">Temukan Resep Masakan Favorit Anda</h1>
+
+    <div id="backlinks" class="mb-4">
+      </div>
+
+    <script>
+      const query = "Bakso%20Telur"; // Pastikan query sudah di-encode
+const apiUrl = `https://api.kyoanna.insomnia247.nl/v1/cookpad?cari=${query}`;
+
+fetch(apiUrl, { mode: 'no-cors' })
+  .then(response => {
+    if (!response.ok) {
+      throw new Error('Network response was not ok.');
+    }
+    return response.json();
+  })
+  .then(data => {
+          const backlinks = data.map(recipe => recipe.link);
+
+          const backlinksContainer = document.getElementById('backlinks');
+          backlinks.forEach(link => {
+            const linkElement = document.createElement('a');
+            linkElement.href = link;
+            linkElement.textContent = link;
+            linkElement.target = "_blank";
+            linkElement.classList.add("block", "mb-2", "text-blue-500", "hover:underline"); // Tambahkan kelas Tailwind
+            backlinksContainer.appendChild(linkElement);
+          });
+        })
+  .catch(error => {
+    console.error('Error fetching data:', error);
+    // Tampilkan pesan error yang lebih informatif kepada pengguna
+    const backlinksContainer = document.getElementById('backlinks');
+    backlinksContainer.innerHTML = '<p class="text-red-500">Terjadi kesalahan saat mengambil data. Silakan coba lagi nanti.</p>';
+  });
+    </script>
+  </div>
+</body>
+</html>
